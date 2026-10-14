@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f5ef">
+  <title>اختر طريقة عرض الشقة</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: "Cairo", system-ui, sans-serif;
+      color: #1c2a24;
+      background: #f4f5ef;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    * { box-sizing: border-box; }
+    body { min-width: 320px; min-height: 100vh; margin: 0; }
+    main {
+      display: grid;
+      min-height: 100vh;
+      place-items: center;
+      padding: 32px 20px;
+      background:
+        radial-gradient(ellipse at 15% 15%, rgba(188, 217, 234, .5), transparent 36%),
+        radial-gradient(ellipse at 90% 85%, rgba(166, 204, 137, .24), transparent 34%),
+        #f4f5ef;
+    }
+    .content { width: min(100%, 920px); text-align: center; }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 12px;
+      color: #1f6f5c;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .eyebrow::before {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+      content: "";
+    }
+    h1 { margin: 0; font-size: clamp(30px, 6vw, 52px); line-height: 1.25; }
+    .intro { margin: 12px 0 36px; color: #55665d; font-size: 17px; }
+    .choices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+    .choice {
+      display: flex;
+      min-height: 245px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 28px;
+      border: 1px solid #d5ded6;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, .82);
+      color: inherit;
+      text-decoration: none;
+      box-shadow: 0 12px 32px rgba(28, 42, 36, .06);
+      transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+    }
+    .choice:hover {
+      transform: translateY(-4px);
+      border-color: #1f6f5c;
+      box-shadow: 0 18px 38px rgba(28, 42, 36, .11);
+    }
+    .choice:focus-visible { outline: 3px solid #1f6f5c; outline-offset: 4px; }
+    .icon {
+      display: grid;
+      width: 76px;
+      height: 76px;
+      place-items: center;
+      margin-bottom: 8px;
+      border-radius: 20px;
+      background: #e8f0ea;
+      color: #1f6f5c;
+    }
+    .icon svg { width: 42px; height: 42px; }
+    .choice-title { font-size: 23px; font-weight: 800; }
+    .choice-description { color: #64736a; font-size: 14px; }
+    .action {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 8px 20px;
+      border-radius: 999px;
+      background: #1f6f5c;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    @media (max-width: 600px) {
+      .intro { margin-bottom: 24px; }
+      .choices { grid-template-columns: 1fr; gap: 12px; }
+      .choice { min-height: 205px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="content" aria-labelledby="page-title">
+      <p class="eyebrow">تصميم الشقة</p>
+      <h1 id="page-title">اختر طريقة العرض</h1>
+      <p class="intro">ابدأ باستكشاف مخطط الشقة بالطريقة التي تفضلها</p>
+      <nav class="choices" aria-label="طرق عرض الشقة">
+        <a class="choice" href="2d.html">
+          <span class="icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M8 8h32v32H8zM24 8v13h16M8 27h16v13M24 21v19"/>
+              <path d="M12 12h8M28 25h8M12 32h8"/>
+            </svg>
+          </span>
+          <span class="choice-title">2D · ثنائي الأبعاد</span>
+          <span class="choice-description">استعرض المسقط والتقسيمات من الأعلى</span>
+          <span class="action">عرض المخطط</span>
+        </a>
+        <a class="choice" href="3d.html">
+          <span class="icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m24 5 18 10v18L24 43 6 33V15L24 5Z"/>
+              <path d="m6 15 18 10 18-10M24 25v18M15 10l18 10v9M15 10v18l9 5"/>
+            </svg>
+          </span>
+          <span class="choice-title">3D · ثلاثي الأبعاد</span>
+          <span class="choice-description">تجوّل في نموذج الشقة واستكشف تفاصيله</span>
+          <span class="action">عرض النموذج</span>
+        </a>
+      </nav>
+    </section>
+  </main>
+</body>
+</html>
