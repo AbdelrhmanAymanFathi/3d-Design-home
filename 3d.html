@@ -216,22 +216,30 @@ button[aria-pressed="true"] { background: var(--accent); color: var(--accent-fg)
     root.add(g);
   }
 
-  /* ground, lawn, fence, path */
+  /* site. West = front garden 2 x 7.5, east = back garden 1 x 7.5, north = side garden 13.5 x 1.75 */
   var groundMat = new THREE.MeshStandardMaterial({ color: 0xb7d1a4, roughness: 1 });
   var ground = new THREE.Mesh(new THREE.PlaneGeometry(260, 260), groundMat);
   ground.rotation.x = -Math.PI / 2; ground.position.y = -0.03; ground.receiveShadow = true; scene.add(ground);
   var lawnMat = new THREE.MeshStandardMaterial({ color: 0xa6cc89, roughness: 1 });
-  var lawn = new THREE.Mesh(new THREE.BoxGeometry(14.25, 0.03, 9), lawnMat);
-  lawn.position.set(6.125, -0.015, 3.75); lawn.receiveShadow = true; scene.add(lawn);
+  function lawnRect(x0, z0, x1, z1) {
+    var m = new THREE.Mesh(new THREE.BoxGeometry(x1 - x0, 0.03, z1 - z0), lawnMat);
+    m.position.set((x0 + x1) / 2, -0.015, (z0 + z1) / 2); m.receiveShadow = true; scene.add(m);
+  }
+  lawnRect(-2, 0, 0, 7.5);
+  lawnRect(12, 0, 13, 7.5);
+  lawnRect(-0.5, -1.75, 13, 0);
+  var pave = new THREE.Mesh(new THREE.BoxGeometry(15.5, 0.02, 1.6), M('#c9c5ba'));
+  pave.position.set(5.5, -0.01, 8.3); pave.receiveShadow = true; scene.add(pave);
 
   var fenceMat = M('#e7e2d6');
   function lowWall(axis, c, s0, s1) { abox(axis, (s0 + s1) / 2, 0.35, c, s1 - s0, 0.7, 0.1, fenceMat); }
-  lowWall('x', -0.75, -1, 13.25);
-  lowWall('x', 8.25, -1, 1.4);
-  lowWall('x', 8.25, 2.5, 13.25);
-  lowWall('z', -1, -0.75, 8.25);
-  lowWall('z', 13.25, -0.75, 8.25);
-  block(1.5, 6.5, 0.9, 1.75, 0.02, '#cfc8b8', 0);
+  lowWall('z', -2, 0, 6.6); lowWall('z', -2, 7.4, 7.5);      /* gate in front of the building door */
+  lowWall('x', 7.5, -2, 0);
+  lowWall('x', 0, -2, -0.5); lowWall('z', -0.5, -1.75, 0);
+  lowWall('x', -1.75, -0.5, 13);
+  lowWall('z', 13, -1.75, 7.5);
+  lowWall('x', 7.5, 12, 13);
+  block(-2, 6.6, 2.0, 0.8, 0.02, '#cfc8b8', 0);               /* path to the building door */
 
   function tree(x, z, s) {
     var g = new THREE.Group(); g.position.set(x, 0, z); g.scale.setScalar(s);
@@ -243,14 +251,126 @@ button[aria-pressed="true"] { background: var(--accent); color: var(--accent-fg)
     fo2.position.set(0.35, 2.2, 0.1); fo2.castShadow = true; g.add(fo2);
     scene.add(g);
   }
-  tree(-0.45, 0.1, 0.6); tree(12.7, 0.2, 0.7); tree(12.65, 7.5, 1.0); tree(-0.4, 7.6, 0.9);
-  tree(4.6, 7.6, 0.8); tree(9.4, 7.7, 0.9); tree(-0.45, 5.6, 0.6); tree(12.7, 3.0, 0.55);
+  tree(-1.2, 0.9, 0.6); tree(-1.2, 5.2, 0.6);
+  tree(12.5, 3.3, 0.35); tree(12.5, 5.0, 0.35);
+  tree(0.4, -1.0, 0.6); tree(4.9, -1.0, 0.5); tree(8.5, -1.0, 0.6); tree(12.2, -1.0, 0.5);
 
   /* floors */
   block(0, 0, 5.2, 6.5, 0.02, '#e6dfd0', 0);       /* reception */
   block(5.2, 4.25, 4.6, 1.05, 0.02, '#e6dfd0', 0);  /* hall */
   block(8.7, 3.5, 1.1, 0.75, 0.02, '#e6dfd0', 0);
   block(5.2, 0, 3.5, 4.25, 0.02, '#c8a57a', 0);     /* room 1 */
+  block(8.7, 0, 3.3, 3.5, 0.02, '#c8a57a', 0);      /* room 2: two 120 cm beds, 160 cm wardrobe, 120 cm desk */
+  block(9.45, 0.15, 1.2, 2.0, 0.45, '#e6e1d6');           /* bed A */
+  block(9.45, 0.07, 1.2, 0.08, 0.95, '#7a5a3e');
+  block(9.75, 0.25, 0.6, 0.35, 0.12, '#ffffff', 0.45);
+  block(9.45, 1.0, 1.2, 1.15, 0.06, '#7fa3b8', 0.45);
+  block(10.74, 0.15, 1.2, 2.0, 0.45, '#e0e6e1');          /* bed B */
+  block(10.74, 0.07, 1.2, 0.08, 0.95, '#7a5a3e');
+  block(11.04, 0.25, 0.6, 0.35, 0.12, '#ffffff', 0.45);
+  block(10.74, 1.0, 1.2, 1.15, 0.06, '#b8a07f', 0.45);
+  block(8.76, 0.1, 0.6, 1.6, 2.1, '#a88562');             /* wardrobe 160 cm on the west wall */
+  block(9.355, 0.9, 0.015, 0.01, 2.0, '#7b5b42', 0.05);
+  block(9.36, 0.75, 0.02, 0.04, 0.2, '#c9b27a', 1.0);
+  block(9.36, 1.0, 0.02, 0.04, 0.2, '#c9b27a', 1.0);
+  block(9.9, 2.9, 1.2, 0.55, 0.04, '#b89874', 0.74);      /* desk 120 cm on the south wall */
+  block(9.92, 2.92, 0.05, 0.05, 0.74, '#8a6a4b');
+  block(11.03, 2.92, 0.05, 0.05, 0.74, '#8a6a4b');
+  block(9.92, 3.38, 0.05, 0.05, 0.74, '#8a6a4b');
+  block(11.03, 3.38, 0.05, 0.05, 0.74, '#8a6a4b');
+  block(10.3, 3.05, 0.35, 0.25, 0.015, '#555555', 0.78);
+  block(10.3, 3.28, 0.35, 0.012, 0.22, '#222222', 0.78);
+  block(10.85, 3.1, 0.1, 0.1, 0.3, '#f3e6c0', 0.78, { emissive: 0xffe9a8, emissiveIntensity: 0.5 });
+  block(10.3, 2.45, 0.42, 0.42, 0.45, '#4d6a7a');         /* desk chair */
+  block(10.3, 2.41, 0.42, 0.06, 0.9, '#43606f');
+
+  /* kitchen */
+  block(9.8, 3.5, 2.2, 1.8, 0.02, '#c9dbe5', 0);    /* bathroom */
+
+  /* walls: exterior 12.5 cm, interior 7.5 cm */
+  var tE = 0.125, tI = 0.075;
+  wall('x', 0, -tE / 2, 12 + tE / 2, tE, [W(1.2, 3.8), W(6.2, 7.7), W(9.4, 11.4)]);
+  wall('x', 6.5, -tE / 2, 12 + tE / 2, tE, [D(1.5, 2.4)]);
+  wall('z', 0, tE / 2, 6.5 - tE / 2, tE, [W(2.2, 4.4)]);
+  wall('z', 12, tE / 2, 6.5 - tE / 2, tE, [W(1.0, 2.4), W(3.9, 4.7), W(5.6, 6.2)]);
+  wall('z', 5.2, tE / 2, 6.5 - tE / 2, tI, [D(4.45, 5.25)]);
+  wall('z', 8.7, tE / 2, 4.25, tI, []);
+  wall('x', 4.25, 5.2, 8.7, tI, [D(5.5, 6.4)]);
+  wall('x', 3.5, 8.7, 12 - tE / 2, tI, [D(9.0, 9.7)]);
+  wall('z', 9.8, 3.5, 5.3, tI, [D(4.2, 4.9)]);
+  wall('x', 5.3, 9.8, 12 - tE / 2, tI, []);
+
+  door(1.5, 6.5, 0.9, 70, '#6b4f37');
+  door(5.5, 4.25, 0.9, 70);
+  door(9.0, 3.5, 0.7, 70);
+  door(9.8, 4.2, 0.7, -20);
+
+  /* building entrance and stair to the two floors above: a 1 m strip along the south side with a glazed front */
+  var wmat = M('#f4f1ea'), frameM = M('#e9e5db'), SH = 5.6;
+  block(0, 6.5, 3.0, 1.0, 0.02, '#d8d2c4', 0);                /* entrance lobby floor */
+  for (var si = 0; si < 32; si++) block(3.0 + si * 0.28, 6.5625, 0.28, 0.875, (si + 1) * 0.175, '#d9d4c7');
+  abox('x', 6, 0.45, 7.5, 12.125, 0.9, tE, wmat);             /* south: solid base */
+  abox('x', 6, 3.25, 7.5, 12, 4.7, 0.03, glassMat, false);    /* south: glass */
+  [0, 3, 6, 9, 12].forEach(function (mx) { abox('x', mx, 3.25, 7.5, 0.07, 4.7, 0.09, frameM); });
+  [2.8, 5.6].forEach(function (my) { abox('x', 6, my, 7.5, 12, 0.08, 0.1, frameM); });
+  abox('z', 7.0, SH / 2, 12, 1.125, SH, tE, wmat);            /* east end */
+  abox('z', 6.51875, SH / 2, 0, 0.1625, SH, tE, wmat);        /* west wall with the building door */
+  abox('z', 7.48125, SH / 2, 0, 0.1625, SH, tE, wmat);
+  abox('z', 7.0, (2.1 + SH) / 2, 0, 0.8, SH - 2.1, tE, wmat);
+  abox('x', 7.5, (2.8 + SH) / 2, 6.5, 9, SH - 2.8, tE, wmat); /* stair wall above the apartment roof line */
+  door(0, 6.6, 0.8, -20, '#6b4f37');
+  var stairRoof = new THREE.Mesh(new THREE.BoxGeometry(12.3, 0.18, 1.3), M('#d4cec2'));
+  stairRoof.position.set(6, SH + 0.09, 7.0); stairRoof.castShadow = true; stairRoof.visible = false;
+  scene.add(stairRoof);
+
+  /* roof (hidden by default so the inside is visible) */
+  var roof = new THREE.Mesh(new THREE.BoxGeometry(12.6, 0.18, 6.85), M('#d4cec2'));
+  roof.position.set(6, H + 0.09, 3.25); roof.castShadow = true; roof.receiveShadow = true; roof.visible = false;
+  scene.add(roof);
+
+  /* furniture: reception. Facing in from the entrance: front = north, left = west wall, right = east wall */
+  var sofaSeat = '#4d6a7a', sofaBack = '#43606f', cush = '#d9c7a3';
+  block(0.12, 0.12, 2.7, 0.95, 0.45, sofaSeat);          /* L sofa: long arm on the north wall */
+  block(0.12, 1.07, 0.95, 2.1, 0.45, sofaSeat);          /* L sofa: short arm on the west wall */
+  block(0.12, 0.12, 2.7, 0.25, 0.92, sofaBack);
+  block(0.12, 1.07, 0.25, 2.1, 0.92, sofaBack);
+  block(2.57, 0.37, 0.25, 0.7, 0.65, sofaBack);          /* arm rests */
+  block(0.37, 2.97, 0.7, 0.2, 0.65, sofaBack);
+  block(0.55, 0.4, 0.55, 0.16, 0.38, cush, 0.45);
+  block(1.55, 0.4, 0.55, 0.16, 0.38, cush, 0.45);
+  block(0.4, 1.8, 0.16, 0.55, 0.38, cush, 0.45);
+  block(1.0, 1.2, 2.6, 2.3, 0.012, '#b9c7c0', 0.02);     /* rug */
+  block(1.75, 1.85, 1.0, 0.65, 0.04, '#8a6a4b', 0.36);   /* coffee table */
+  block(1.8, 1.9, 0.07, 0.07, 0.36, '#6f533a');
+  block(2.63, 1.9, 0.07, 0.07, 0.36, '#6f533a');
+  block(1.8, 2.43, 0.07, 0.07, 0.36, '#6f533a');
+  block(2.63, 2.43, 0.07, 0.07, 0.36, '#6f533a');
+  block(4.75, 1.3, 0.4, 1.9, 0.45, '#5a4636');            /* TV unit on the east wall */
+  block(5.08, 1.65, 0.05, 1.2, 0.7, '#0f1416', 0.85, { emissive: 0x1a2a33, emissiveIntensity: 0.4 });
+  block(2.5, 3.8, 1.6, 0.9, 0.04, '#9b7b58', 0.72);       /* dining table */
+  block(2.55, 3.85, 0.07, 0.07, 0.72, '#8a6a4b');
+  block(3.98, 3.85, 0.07, 0.07, 0.72, '#8a6a4b');
+  block(2.55, 4.58, 0.07, 0.07, 0.72, '#8a6a4b');
+  block(3.98, 4.58, 0.07, 0.07, 0.72, '#8a6a4b');
+  function chair(x, z, side) {
+    block(x, z, 0.42, 0.42, 0.45, '#c9b9a0');
+    if (side === 'n') block(x, z, 0.42, 0.06, 0.9, '#b8a888');
+    if (side === 's') block(x, z + 0.36, 0.42, 0.06, 0.9, '#b8a888');
+    if (side === 'w') block(x, z, 0.06, 0.42, 0.9, '#b8a888');
+    if (side === 'e') block(x + 0.36, z, 0.06, 0.42, 0.9, '#b8a888');
+  }
+  chair(2.75, 3.33, 'n'); chair(3.45, 3.33, 'n');
+  chair(2.75, 4.75, 's'); chair(3.45, 4.75, 's');
+  chair(2.05, 4.05, 'w'); chair(4.13, 4.05, 'e');
+  block(0.12, 4.7, 0.4, 1.5, 0.85, '#7b5b42');            /* buffet on the west wall */
+  block(0.1, 4.68, 0.44, 1.54, 0.04, '#d9d2c3', 0.85);
+  block(0.52, 4.85, 0.02, 0.6, 0.6, '#6a4c36', 0.12);
+  block(0.52, 5.5, 0.02, 0.6, 0.6, '#6a4c36', 0.12);
+  block(0.25, 5.05, 0.12, 0.12, 0.3, '#7aa6a0', 0.89);
+  block(0.25, 5.75, 0.14, 0.14, 0.35, '#f3e6c0', 0.89, { emissive: 0xffe9a8, emissiveIntensity: 0.5 });
+  block(0.08, 5.0, 0.04, 0.9, 0.6, '#d8c9a8', 1.3);       /* picture above the buffet */
+
+  /* room 1 */
   block(8.7, 0, 3.3, 3.5, 0.02, '#c8a57a', 0);      /* room 2 */
   block(5.2, 5.3, 6.8, 1.2, 0.02, '#d7d2c6', 0);    /* kitchen */
   block(9.8, 3.5, 2.2, 1.8, 0.02, '#c9dbe5', 0);    /* bathroom */
@@ -279,32 +399,18 @@ button[aria-pressed="true"] { background: var(--accent); color: var(--accent-fg)
   scene.add(roof);
 
   /* furniture: reception */
-  /* L-shaped sofa in the front-left corner, facing the TV on the right wall */
-  block(0.5, 1.0, 0.9, 2.45, 0.45, '#4d6a7a');             /* long seat */
-  block(1.3, 0.45, 1.45, 0.9, 0.45, '#4d6a7a');            /* front return */
-  block(0.12, 0.95, 0.45, 2.55, 0.9, '#43606f');           /* left back */
-  block(0.45, 0.12, 2.35, 0.42, 0.9, '#43606f');           /* front back */
-  block(0.5, 0.95, 0.9, 0.18, 0.62, '#43606f');            /* rear arm */
-  block(0.5, 3.25, 0.9, 0.18, 0.62, '#43606f');            /* end arm */
-  block(2.55, 0.45, 0.18, 0.9, 0.62, '#43606f');           /* return arm */
-  block(1.45, 1.45, 2.0, 1.65, 0.012, '#b9c7c0', 0.02);   /* rug */
-  block(2.0, 2.0, 1.0, 0.65, 0.4, '#8a6a4b');              /* coffee table */
-
-  /* TV and low console on the right wall */
-  block(4.52, 1.25, 0.55, 1.55, 0.42, '#5a4636');          /* tv unit */
-  block(5.08, 1.3, 0.07, 1.45, 0.82, '#14181a', 1.2);     /* tv */
-
-  /* dining area toward the entrance, with a buffet beside it */
-  block(2.55, 3.55, 1.55, 0.9, 0.08, '#9b7b58', 0.72);    /* dining top */
-  [[2.62, 3.62], [3.95, 3.62], [2.62, 4.32], [3.95, 4.32]].forEach(function (p) {
-    block(p[0], p[1], 0.08, 0.08, 0.7, '#8a6a4b');
-  });
-  [[2.25, 3.78], [4.38, 3.78], [2.25, 4.18], [4.38, 4.18]].forEach(function (p) {
-    block(p[0], p[1], 0.42, 0.42, 0.45, '#c9b9a0');
-    block(p[0] + 0.04, p[1] + 0.04, 0.34, 0.34, 0.08, '#8a6a4b', 0.45);
-  });
-  block(4.55, 3.15, 0.48, 1.05, 0.78, '#5a4636');          /* buffet */
-  block(4.48, 3.1, 0.58, 1.15, 0.06, '#9b7b58', 0.78);    /* buffet top */
+  block(0.9, 0.6, 2.5, 0.9, 0.45, '#4d6a7a');                 /* sofa seat */
+  block(0.9, 0.15, 2.5, 0.45, 0.9, '#43606f');                /* sofa back */
+  block(0.9, 0.6, 0.18, 0.9, 0.62, '#43606f');
+  block(3.22, 0.6, 0.18, 0.9, 0.62, '#43606f');
+  block(1.1, 1.9, 2.2, 1.6, 0.012, '#b9c7c0', 0.02);         /* rug */
+  block(1.7, 2.3, 1.1, 0.7, 0.4, '#8a6a4b');                 /* coffee table */
+  block(3.2, 6.1, 1.7, 0.35, 0.5, '#5a4636');                 /* tv unit */
+  block(3.45, 6.3, 1.2, 0.05, 0.7, '#14181a', 0.75);          /* tv */
+  block(3.3, 3.3, 1.4, 0.9, 0.04, '#9b7b58', 0.72);           /* dining top */
+  [[3.4, 3.4], [4.55, 3.4], [3.4, 4.05], [4.55, 4.05]].forEach(function (p) { block(p[0], p[1], 0.7 - 0.0, 0.08, 0.72, '#8a6a4b'); });
+  [[3.0, 3.55], [4.75, 3.55]].forEach(function (p) { block(p[0], p[1], 0.35, 0.35, 0.45, '#c9b9a0'); });
+  [[3.6, 2.85], [4.3, 2.85], [3.6, 4.2], [4.3, 4.2]].forEach(function (p) { block(p[0], p[1], 0.35, 0.35, 0.45, '#c9b9a0'); });
 
   /* room 1 */
   block(6.1, 0.15, 1.6, 2.0, 0.45, '#e9e4da');
@@ -374,10 +480,12 @@ button[aria-pressed="true"] { background: var(--accent); color: var(--accent-fg)
     makeLabel('مطبخ أمريكي', null, 8.4, 1.6, 6.0, 0.7);
     makeLabel('طرقة', null, 7.2, 1.5, 4.6, 0.45);
     var g = 'rgba(220,238,206,0.92)';
-    makeLabel('حديقة خلفية', null, 6, 0.8, -0.42, 0.55, g);
-    makeLabel('حديقة أمامية', null, 7, 0.8, 7.5, 0.6, g);
-    makeLabel('حديقة جانبية', null, 12.65, 0.8, 4.6, 0.55, g);
-    makeLabel('مدخل المنزل', null, 1.95, 0.9, 7.55, 0.5, g);
+    makeLabel('حديقة أمامية', '2 × 7.5', -1.0, 0.9, 3.7, 0.55, g);
+    makeLabel('حديقة خلفية', '1 × 7.5', 12.5, 0.9, 3.7, 0.5, g);
+    makeLabel('حديقة جانبية', '13.5 × 1.75', 6.25, 0.9, -0.9, 0.6, g);
+    makeLabel('مدخل العمارة', null, -1.0, 1.4, 7.0, 0.5, g);
+    makeLabel('سلم للدورين العلويين', null, 8.0, 3.0, 7.0, 0.75);
+    makeLabel('باب الشقة', null, 1.95, 1.2, 7.0, 0.4);
   }
   var fontWait = (document.fonts && document.fonts.load) ? Promise.race([document.fonts.load('700 56px Cairo'), new Promise(function (r) { setTimeout(r, 1500); })]) : Promise.resolve();
   fontWait.then(buildLabels, buildLabels);
@@ -415,7 +523,7 @@ button[aria-pressed="true"] { background: var(--accent); color: var(--accent-fg)
       fn(on);
     });
   }
-  toggle('b-roof', function (on) { roof.visible = on; });
+  toggle('b-roof', function (on) { roof.visible = on; stairRoof.visible = on; });
   toggle('b-labels', function (on) { labelsGroup.visible = on; });
   toggle('b-spin', function (on) { controls.autoRotate = on; });
 
